@@ -13,8 +13,8 @@ import (
 func SendMail(to []string, otp string) error {
 
   var (
-    fromGmail = "xaydarovjasur6999@gmail.com .."
-    password  = "tcsx pfrc edwd xwto "
+    fromGmail = "xaydarovjasur6999@gmail.com"
+    password  = "pzlt skhd nvgq fxks"
   )
 
   smsHost := "smtp.gmail.com"

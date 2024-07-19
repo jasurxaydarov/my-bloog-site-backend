@@ -168,3 +168,13 @@ func (c *ContentRepo)DeleteSubCategory(ctx context.Context,id string)(error){
 	return nil
 }
 
+
+
+/*
+	INSERT INTO viwers (viwer_id, fullname, username, gmail, password)
+VALUES
+    ('123e4567-e89b-12d3-a456-426614174000', 'John Doe', 'johndoe', 'xaydarovjasur2005@gmail.com', 'password123'),
+    ('123e4567-e89b-12d3-a456-426614174001', 'Jane Smith', 'janesmith', 'janesmith@gmail.com', 'password456'),
+    ('123e4567-e89b-12d3-a456-426614174002', 'Alice Johnson', 'alicej', 'alicej@gmail.com', 'password789');
+
+*/

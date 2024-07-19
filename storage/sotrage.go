@@ -23,6 +23,8 @@ func NewStorage(db *pgx.Conn, log logger.LoggerI) StorageI {
 
 	return &storage{
 		contentRepo: postgres.NewContent(db, log),
+		commonRepo:postgres.NewCoomnRepo(db,log),
+		ownerRepo:postgres.NewOwneRrepo(db,log),
 	}
 }
 

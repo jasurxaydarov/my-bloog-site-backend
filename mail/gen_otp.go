@@ -5,7 +5,7 @@ import (
 	"math/big"
   )
   
-  func GenerateOtp(length int) (string, error) {
+  func GenerateOtp(length int) (string) {
   
 	const charset = "0123456789"
   
@@ -17,11 +17,11 @@ import (
   
 	  if err != nil {
   
-		return "",err
+		return ""
 	  }
   
 	  otp[i] = charset[random.Int64()]
 	}
   
-	return string(otp), nil
+	return string(otp)
   }

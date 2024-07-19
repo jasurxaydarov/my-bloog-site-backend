@@ -7,6 +7,8 @@ import (
 	"jasurxaydarov/my-bloog-site-backend/config"
 	"jasurxaydarov/my-bloog-site-backend/pgx/db"
 	"jasurxaydarov/my-bloog-site-backend/storage"
+	"jasurxaydarov/my-bloog-site-backend/storage/redis"
+
 	logg "github.com/saidamir98/udevs_pkg/logger"
 )
 
@@ -35,12 +37,13 @@ func main() {
 	}
 
 	fmt.Println(redisCli)
+	cache:=redis.NewRedisRepo(redisCli,log)
 
 	//storage:=storage.NewStorage(&pgxpool.Pool{},log)
 
 	storage:= storage.NewStorage(pgx,log)
 
-	engine:=api.Api(api.Options{Storage:storage,Log: log})
+	engine:=api.Api(api.Options{Storage:storage,Log: log,Cache: cache})
 
 	engine.Run()
 

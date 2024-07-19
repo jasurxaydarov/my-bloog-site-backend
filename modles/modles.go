@@ -109,3 +109,9 @@ type CheckExists struct {
 	IsExists bool
 	Status   string
 }
+
+type OtpData struct{
+
+	Otp 	string `json:"otp"`
+	Gmail 	string `json:"gmail"`
+}
