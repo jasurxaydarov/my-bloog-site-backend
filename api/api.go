@@ -35,7 +35,11 @@ func Api(O Options) *gin.Engine {
 
 	pb := api.Group("/pb")
 	{
-		pb.POST("/check_user", h.CheckUser)
+
+		pb.POST("/check-user", h.CheckUser)
+		pb.POST("/check-otp", h.CheckOtp)
+		pb.POST("/sign-up",h.SignUp)
+
 	}
 
 	return engine

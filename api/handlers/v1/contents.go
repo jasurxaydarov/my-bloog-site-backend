@@ -72,3 +72,5 @@ func(h *handlers)GetCategories(ctx *gin.Context){
 
 	ctx.JSON(200,resp)
 }
+
+

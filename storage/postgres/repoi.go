@@ -13,12 +13,17 @@ type ContentRepoI interface{
 	UpdateCategory(ctx context.Context,req modles.Category)(error)
 	DeleteCategory(ctx context.Context,id string)(error)
 	
-	SubCreateategory(ctx context.Context,req modles.SubCategory)(*modles.SubCategoryResp,error)
+	SubCreateCategory(ctx context.Context,req modles.SubCategory)(*modles.SubCategoryResp,error)
 	GetSubCategory(ctx context.Context,id string)(*modles.SubCategoryResp,error)
 	GetSubCategories(ctx context.Context,list modles.GetList)(*modles.SubCategoriesResp,error)
 	UpdateSubCategory(ctx context.Context,req modles.SubCategory)(error)
 	DeleteSubCategory(ctx context.Context,id string)(error)
 
+	CreateViwer(ctx context.Context,req modles.ViewerReqReg)(*modles.Viewer,error)
+	GetViwer(ctx context.Context,id string)(*modles.Viewer,error)
+	GetViwers(ctx context.Context,list modles.GetList)(*modles.GetViwersResp,error)
+	UpdateViwer(ctx context.Context,req modles.Viewer)(error)
+	DeleteViwer(ctx context.Context,id string)(error)
 
 }
 

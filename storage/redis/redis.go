@@ -11,9 +11,9 @@ import (
 type RedisRepoI interface {
 	Exist(ctx context.Context, key string) (bool, error)
 	Set(ctx context.Context, key, value string, exp int) error
-	Get(ctx context.Context, key string) error
+	Get(ctx context.Context, key string) (string,error)
 	Del(ctx context.Context, key string) (any, error)
-	GetDel(ctx context.Context, key string) (any, error)
+	GetDell(ctx context.Context, key string) (string, error)
 }
 type redisRepo struct {
 	cli *redis.Client
@@ -27,7 +27,7 @@ func NewRedisRepo(cli *redis.Client, log logger.LoggerI) RedisRepoI {
 
 func (r *redisRepo) Exist(ctx context.Context, key string) (bool, error) {
 
-	defer r.cli.Close()
+
 
 	isExists, err := r.cli.Do(ctx, "EXISTS", key).Result()
 
@@ -43,7 +43,7 @@ func (r *redisRepo) Exist(ctx context.Context, key string) (bool, error) {
 
 
 func (r *redisRepo) Set(ctx context.Context, key, value string, exp int) error {
-	r.log.Debug("req in Set")
+
 	_, err := r.cli.SetEX(ctx, key, value, time.Second*time.Duration(exp)).Result()
 
 	if err != nil {
@@ -51,19 +51,27 @@ func (r *redisRepo) Set(ctx context.Context, key, value string, exp int) error {
 		return err
 	}
 
+
+
 	return nil
 }
 
 
-func (r *redisRepo) Get(ctx context.Context, key string) error {
+func (r *redisRepo) Get(ctx context.Context, key string) (string,error) {
 
-	return nil
+	return "",nil
 }
 func (r *redisRepo) Del(ctx context.Context, key string) (any, error) {
 
 	return nil, nil
 }
-func (r *redisRepo) GetDel(ctx context.Context, key string) (any, error) {
 
-	return nil, nil
+func (r *redisRepo) GetDell(ctx context.Context, key string) (string, error) {
+
+	anyData, err:=r.cli.GetDel(ctx,key).Result()
+	if err != nil {
+		r.log.Error("erro on GetDel to cache ", logger.Error(err))
+		return "",err
+	}
+	return anyData, nil
 }
