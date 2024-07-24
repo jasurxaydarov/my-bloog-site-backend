@@ -1,51 +1,62 @@
 package token
 
 import (
+	"fmt"
+	"jasurxaydarov/my-bloog-site-backend/modles"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/saidamir98/udevs_pkg/logger"
 )
 
-type JWTHandler struct {
-	UserId    string
-	Exp       string
-	Iot       string
-	Aud       []string
-	Role      string
-	SignedKey string
-	Log       logger.LoggerI
-	Token     string
-	TimeOut   int
+type Claim struct {
+	UserId   string
+	UserRole string
+	jwt.StandardClaims
 }
 
-type CostumClaims struct {
-	*jwt.Token
-	UserId string   `json:"user_id"`
-	Exp    int      `json:"exp"`
-	Iot    string   `json:"iot"`
-	Role   string   `json:"user_role"`
-	Aud    []string `json:"aud"`
-}
+var secretJwtKey =[]byte("Shit")
 
-func (j *JWTHandler) GenerateToken() (accesToken string, err error) {
+func GenerateJWT(claim modles.Clamis)(string,error){
 
-	var (
-		token *jwt.Token
-		claim jwt.MapClaims
-	)
+	experationTime:=time.Now().Add(1*time.Hour)
 
-	token = jwt.New(jwt.SigningMethodHS256)
-
-	claim = token.Claims.(jwt.MapClaims)
-	claim["user_id"] = j.UserId
-	claim["exp"] = time.Now().Add(time.Minute * time.Duration(j.TimeOut)).Unix()
-	claim["user_role"] = j.Role
-
-	accesToken, err = token.SignedString([]byte(j.SignedKey))
-	if err != nil {
-		j.Log.Error("error on Generating token", logger.Error(err))
-		return
+	jwtClaim:=Claim{
+		UserId: claim.UserId,
+		UserRole: claim.UserRole,
+		StandardClaims: jwt.StandardClaims{ExpiresAt: experationTime.Unix()},
 	}
-	return
+
+	token:=jwt.NewWithClaims(jwt.SigningMethodHS256,jwtClaim)
+
+	tokenString,err:=token.SignedString(secretJwtKey)
+
+	if err!=nil{
+		return "",err
+	}
+	return tokenString,nil
+}
+
+
+func ParseJWT(tokenString string)(*Claim,error){
+
+	var claim = &Claim{}
+
+	token,err:=jwt.ParseWithClaims(tokenString,claim,func(t *jwt.Token) (interface{}, error) {
+
+		return secretJwtKey,nil
+	})
+
+
+	if err!= nil{
+		return nil,err
+	}
+
+	if !token.Valid{
+
+		return nil,fmt.Errorf("Invalid token")
+	}
+
+
+
+	return claim,nil
 }

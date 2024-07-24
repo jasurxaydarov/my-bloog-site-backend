@@ -26,7 +26,8 @@ CREATE TABLE sub_categories(
     sub_category_id UUID            PRIMARY KEY,
     name            VARCHAR(124)    NOT NULL,
     created_at      TIMESTAMP       DEFAULT current_timestamp,
-    category_id     UUID            REFERENCES  categories(category_id)
+    category_id     UUID,
+    FOREIGN KEY (category_id)   REFERENCES categories(category_id) ON DELETE CASCADE ON UPDATE CASCADE,
 );
 
 
@@ -51,10 +52,38 @@ CREATE TABLE viwers(
     password        VARCHAR(20)     NOT NULL
 );
 
-CREATE TABLE coments(
-    coment_id       UUID            PRIMARY KEY,
-    coment          VARCHAR(512)    NOT NULL,
+CREATE TABLE comments(
+    comment_id       UUID            PRIMARY KEY,
+    comment          VARCHAR(512)    NOT NULL,
     created_at      TIMESTAMP       DEFAULT current_timestamp,
     viwer_id        UUID            REFERENCES viwers(viwer_id),
     article_id      UUID            REFERENCES articles(article_id)
 );
+
+drop table coments;
+ALTER TABLE viwes
+ALTER COLUMN password
+TYPE character varying(90);
+
+  "viwer_id":"24f90e07-871d-4d1e-aca0-a1ceb4dc7912",
+  "article_id":"a8586cea-26c5-443d-acba-902b6c19f729"
+
+	INSERT INTO
+			sub_categories(
+				sub_category_id,
+				name,
+				category_id
+			)VALUES(
+				'857ad14a-a43a-4f97-81a7-9846e17fb679',
+                'info',
+                '39895c3d-1422-4459-bfd1-349e9aa917e8'
+			);
+            
+            INSERT INTO
+			comments(
+				comment_id,
+				comment,
+				viwer_id,
+				article_id
+			)VALUES(
+				'857ad14a-a43a-4f97-81a7-9846e17fb679','zur idea','24f90e07-871d-4d1e-aca0-a1ceb4dc7912','a8586cea-26c5-443d-acba-902b6c19f729');

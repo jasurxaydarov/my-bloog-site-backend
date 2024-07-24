@@ -14,12 +14,10 @@ import (
 
 func main() {
 
-
-
 	cfg := config.Load()
 
 	log := logg.NewLogger(cfg.GeneralConfig.AppName, config.DebugMode)
-	
+
 	pgx, err := db.ConnToDb(cfg.PgConfig, log)
 
 	if err != nil {
@@ -37,13 +35,13 @@ func main() {
 	}
 
 	fmt.Println(redisCli)
-	cache:=redis.NewRedisRepo(redisCli,log)
+	cache := redis.NewRedisRepo(redisCli, log)
 
 	//storage:=storage.NewStorage(&pgxpool.Pool{},log)
 
-	storage:= storage.NewStorage(pgx,log)
+	storage := storage.NewStorage(pgx, log)
 
-	engine:=api.Api(api.Options{Storage:storage,Log: log,Cache: cache})
+	engine := api.Api(api.Options{Storage: storage, Log: log, Cache: cache})
 
 	engine.Run()
 

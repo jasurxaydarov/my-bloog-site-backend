@@ -5,8 +5,11 @@ import (
 	"encoding/json"
 	"jasurxaydarov/my-bloog-site-backend/mail"
 	"jasurxaydarov/my-bloog-site-backend/modles"
+	"jasurxaydarov/my-bloog-site-backend/pgx/helpers"
+	"jasurxaydarov/my-bloog-site-backend/token"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/saidamir98/udevs_pkg/logger"
 )
 
@@ -103,8 +106,11 @@ func (h *handlers) CheckOtp(ctx *gin.Context) {
 	ctx.JSON(201, modles.CheckOtpRep{IsRight: cacheData.Otp == reqBody.Otp})
 }
 
+// singUp
 func (h *handlers) SignUp(ctx *gin.Context) {
+	var viewer modles.Viewer
 	var reqBody modles.ViewerReqReg
+
 	var otpData modles.OtpData
 
 	err := ctx.ShouldBindJSON(&reqBody)
@@ -132,12 +138,64 @@ func (h *handlers) SignUp(ctx *gin.Context) {
 		return
 	}
 
-	_, err = h.storage.GetContentRepo().CreateViwer(context.Background(), reqBody)
+	helpers.DataParser(reqBody, &viewer)
 
-	if otpData.Otp != reqBody.Otp {
+	viewer.ViewerID = uuid.New()
+	viewer.Password, err = helpers.HashPassword(viewer.Password)
+
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	claim, err := h.storage.GetViwerRepo().CreateViwer(context.Background(), viewer)
+
+	if err != nil {
 		ctx.JSON(500, err)
 		return
 	}
+	accessToken, err := token.GenerateJWT(*claim)
 
-	ctx.JSON(201, "succesfully registretd")
+	if err != nil {
+		ctx.JSON(201, "registereted")
+		return
+	}
+
+	ctx.JSON(201, modles.AuthResp{AccessToken: accessToken})
 }
+
+func (h *handlers) SignIn(ctx *gin.Context) {
+	var req modles.LoginViwer
+
+	err:=ctx.Bind(&req)
+
+	if err!= nil{
+		return
+	}
+
+	claim,err:= h.storage.GetViwerRepo().LogInViwer(ctx,req)
+
+	if err!=nil{
+		if err.Error()=="password is incorrect" {
+
+			ctx.JSON(405,err)
+			return 
+			
+		}
+		return
+	}
+
+	accessToken,err:=token.GenerateJWT(*claim)
+
+	if err!= nil{
+		return
+	}
+
+	ctx.JSON(201,accessToken)
+
+}
+
+func (h *handlers) SignOut(ctx *gin.Context) {
+
+}
+
+

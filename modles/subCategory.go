@@ -1,4 +1,5 @@
 package modles
+
 import (
 	"time"
 
@@ -13,12 +14,13 @@ type SubCategory struct {
 	CategoryID    uuid.UUID `json:"category_id"`
 }
 
-type SubCategoriesResp struct {
-	Category SubCategory
-	Count    int
+type SubCategoryReq struct {
+	SubCategoryID uuid.UUID `json:"sub_category_id"`
+	Name          string    `json:"name"`
+	CategoryID    uuid.UUID `json:"category_id"`
 }
 
-type SubCategoryResp struct {
-	Name       string    `json:"name"`
-	CategoryID uuid.UUID `json:"category_id"`
+type GetSubCategoriesLidtResp struct {
+	SubCategory []*SubCategory `json:"sub_categories"`
+	Count    int32           `json:"count"`
 }

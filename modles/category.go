@@ -18,6 +18,12 @@ type CategoryResp struct {
 }
 
 type GetCategories struct {
-	Categories []*Category
-	Count      int32
+	Categories []*Category `json:"categories"`
+	Count      int32       `json:"count"`
+}
+
+
+type UpdateCategoryReq struct {
+	CategoryID    uuid.UUID `json:"category_id"`
+	Name          string    `json:"name"`
 }

@@ -25,7 +25,7 @@ func (h *handlers)CreateCategory(ctx *gin.Context){
 	}
 	helpers.DataParser(req,reqq)
 
-	resp, err:=h.storage.GetContentRepo().Createategory(context.Background(),reqq)
+	resp, err:=h.storage.GetContentRepo().CreateCategory(context.Background(),reqq)
 
 	if err!= nil{
 		ctx.JSON(500,err)
@@ -63,7 +63,7 @@ func(h *handlers)GetCategories(ctx *gin.Context){
 	list.Limit=helpers.GetLimit(limit)
 	list.Pge=helpers.GetPage(page)
 
-	resp,err:=h.storage.GetContentRepo().GetCategories(context.Background(),list.Limit,list.Pge)
+	resp,err:=h.storage.GetContentRepo().GetCategories(context.Background(),list)
 
 	if err!= nil{
 		ctx.JSON(500,err)
@@ -72,5 +72,41 @@ func(h *handlers)GetCategories(ctx *gin.Context){
 
 	ctx.JSON(200,resp)
 }
+
+
+func (h *handlers)UpdateCategory(ctx *gin.Context){
+
+
+	id:=ctx.Param("id")
+
+	resp, err:= h.storage.GetContentRepo().GetCategory(context.Background(),id)
+
+	if err!= nil{
+		ctx.JSON(500,err)
+		return
+	}
+
+	ctx.JSON(200,resp)
+
+}
+
+func (h *handlers)DeleteCategory(ctx *gin.Context){
+
+
+	id:=ctx.Param("id")
+
+	resp, err:= h.storage.GetContentRepo().GetCategory(context.Background(),id)
+
+	if err!= nil{
+		ctx.JSON(500,err)
+		return
+	}
+
+	ctx.JSON(200,resp)
+
+}
+
+
+
 
 
